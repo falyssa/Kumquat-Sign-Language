@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kumquat Sign Language</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="section section--top">
+  <div class="top-bar">
+    <a class="nav-link on-light" href="training.html">Training Page &rarr;</a>
+  </div>
+  <h1 class="site-title">Kumquat Sign Language</h1>
+
+  <svg class="doodle doodle--fern" viewBox="0 0 130 170" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <g id="frond">
+        <path d="M0,0 C-2,-30 2,-60 0,-88" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M0,-20 C-8,-24 -13,-20 -13,-13 C-8,-11 -3,-15 0,-20 Z" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M0,-30 C8,-34 13,-30 13,-23 C8,-21 3,-25 0,-30 Z" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M0,-45 C-7,-49 -11,-45 -11,-39 C-7,-37 -3,-41 0,-45 Z" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M0,-55 C7,-59 11,-55 11,-49 C7,-47 3,-51 0,-55 Z" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M0,-68 C-5,-71 -8,-68 -8,-63 C-5,-62 -2,-65 0,-68 Z" stroke="currentColor" stroke-width="1"/>
+        <path d="M0,-76 C5,-79 8,-76 8,-71 C5,-70 2,-73 0,-76 Z" stroke="currentColor" stroke-width="1"/>
+        <path d="M0,-88 C-3,-92 -3,-96 0,-100 C3,-96 3,-92 0,-88 Z" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </defs>
+    <g transform="translate(65,160) rotate(-30)">
+      <use href="#frond" class="fern-leaf"/>
+    </g>
+    <g transform="translate(65,160) scale(1.1)">
+      <use href="#frond" class="fern-leaf fern-leaf--delay-1"/>
+    </g>
+    <g transform="translate(65,160) rotate(30)">
+      <use href="#frond" class="fern-leaf fern-leaf--delay-2"/>
+    </g>
+  </svg>
+
+  <div class="easel-legs"></div>
+  <div class="whiteboard">
+    <div class="whiteboard__face" id="board-face">
+      <video id="camera-video" autoplay playsinline muted></video>
+      <canvas id="camera-canvas"></canvas>
+      <p class="whiteboard__placeholder" id="board-placeholder">Allow camera access to start signing</p>
+      <div class="emoji-layer" id="emoji-layer"></div>
+    </div>
+  </div>
+</header>
+
+<main class="section section--mid">
+  <svg class="doodle doodle--trex" viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path class="trex-leg" d="M85,120 L78,158 L100,158 L104,122 Z" fill="var(--trex-base)"/>
+    <path class="trex-body" d="M5,120 C15,90 40,65 75,60 C80,40 100,25 130,25 C150,25 165,35 178,50 C185,58 188,66 182,72 L160,70 C150,80 135,90 120,105 C100,125 60,130 30,125 C15,123 5,122 5,120 Z" fill="var(--trex-base)"/>
+    <g fill="var(--trex-scale)">
+      <path d="M28,84 L34,70 L40,84 Z"/>
+      <path d="M50,68 L56,54 L62,68 Z"/>
+      <path d="M75,52 L81,38 L87,52 Z"/>
+      <path d="M100,33 L106,20 L112,33 Z"/>
+      <path d="M122,26 L128,15 L134,26 Z"/>
+    </g>
+    <g fill="var(--white)">
+      <path d="M162,70 L165,76 L168,70 Z"/>
+      <path d="M170,70 L173,76 L176,70 Z"/>
+    </g>
+    <g class="trex-arm">
+      <path d="M140,78 C148,85 150,95 145,102 C140,96 134,88 132,80 Z" fill="var(--trex-base)"/>
+    </g>
+    <g class="trex-jaw">
+      <path d="M160,72 C172,78 184,80 190,74 L188,86 C176,90 164,86 156,80 Z" fill="var(--trex-base)"/>
+    </g>
+    <circle cx="150" cy="40" r="4" fill="#fff"/>
+    <circle cx="151" cy="40" r="2" fill="var(--ink)"/>
+  </svg>
+
+  <svg class="doodle doodle--bone" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g class="bone-mark" fill="currentColor">
+      <rect x="25" y="24" width="50" height="12" rx="6"/>
+      <circle cx="18" cy="20" r="10"/>
+      <circle cx="18" cy="40" r="10"/>
+      <circle cx="82" cy="20" r="10"/>
+      <circle cx="82" cy="40" r="10"/>
+    </g>
+  </svg>
+
+  <svg class="doodle doodle--print" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="button" aria-label="Stomp the dino print" tabindex="0">
+    <g class="print-mark" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="50" cy="85" rx="17" ry="13"/>
+      <path d="M37,77 C27,62 21,42 24,25 C32,41 38,61 43,75 Z"/>
+      <path d="M24,25 L18,15"/>
+      <path d="M50,75 C48,52 50,26 53,10 C57,26 55,54 55,75 Z"/>
+      <path d="M53,10 L54,0"/>
+      <path d="M63,75 C71,58 77,38 74,22 C66,38 60,58 58,75 Z"/>
+      <path d="M74,22 L81,13"/>
+    </g>
+  </svg>
+
+  <div class="word-pill-wrap">
+    <div class="word-pill" id="word-pill">&mdash;</div>
+  </div>
+  <p class="status-line" id="status-line">Starting camera&hellip;</p>
+</main>
+
+<section class="section section--bottom">
+  <h2 class="section-heading">Description</h2>
+  <p class="description-text">
+    Kumquat Sign Language turns hand gestures you and your sibling invent into emoji, live.
+    Head to the <a href="training.html">Training Page</a> to teach it a new sign &mdash; it remembers
+    everything on this device, so you never have to retrain twice.
+  </p>
+</section>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
