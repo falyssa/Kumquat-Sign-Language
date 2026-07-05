@@ -1,0 +1,53 @@
+// Tiny Web Audio synth helper for short UI chimes. Used by both pages, so
+// the sound-generation code (and its suspended-context handling) lives in
+// one place instead of being duplicated. No audio files/asset pipeline
+// needed since this is a no-build static site.
+
+let ctx = null;
+
+function getContext() {
+  if (!ctx) {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return ctx;
+}
+
+// Browsers only allow audio to start inside a trusted user gesture (click,
+// keydown, touchstart). Chimes triggered from the hand-tracking loop are not
+// a user gesture, so without this the context would stay silently suspended
+// forever on pages (like the live page) that never call playChime from a
+// click handler. Unlocking eagerly on the very first interaction anywhere on
+// the page means it's already running by the time recognition needs it.
+function unlock() {
+  getContext().resume();
+}
+
+['pointerdown', 'keydown', 'touchstart'].forEach((type) => {
+  document.addEventListener(type, unlock, { once: true });
+});
+
+export async function playChime(frequencies, { gain = 0.5, noteDuration = 0.3, noteGap = 0.12 } = {}) {
+  try {
+    const audioCtx = getContext();
+    if (audioCtx.state === 'suspended') {
+      await audioCtx.resume();
+    }
+    const now = audioCtx.currentTime;
+    frequencies.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      const start = now + i * noteGap;
+      gainNode.gain.setValueAtTime(0, start);
+      gainNode.gain.linearRampToValueAtTime(gain, start + 0.02);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, start + noteDuration);
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      osc.start(start);
+      osc.stop(start + noteDuration + 0.02);
+    });
+  } catch (err) {
+    console.error('Chime playback failed:', err);
+  }
+}

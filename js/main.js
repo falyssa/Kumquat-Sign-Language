@@ -1,6 +1,7 @@
 import { startHandTracking } from './handTracker.js';
 import { loadGestures, normalizeHands, classify } from './gestureStore.js';
 import { initDoodleInteractions } from './doodles.js';
+import { playChime } from './sfx.js';
 
 const VOTE_WINDOW = 10;
 const MIN_VOTES = 6;
@@ -58,6 +59,7 @@ function updateDisplay() {
     wordPillEl.textContent = gesture.word;
     if (winnerId !== lastSpawnedId) {
       spawnEmoji(gesture.emoji);
+      playChime([659.25, 987.77]);
       lastSpawnedId = winnerId;
     }
   } else {
