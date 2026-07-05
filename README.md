@@ -11,24 +11,17 @@ right away as an emoji on screen, with a little sound to go with it. It's also
 where we keep every sign we've invented together as siblings, so none of them
 get forgotten.
 
-## Deploying it (GitHub Pages, Render, etc.)
+**Live site:** https://falyssa.github.io/Kumquat-Sign-Language/
 
-This is a plain static site — no build step, no server code, no environment
-variables — so it deploys as-is to any static host:
+## Deploying it
 
-- **GitHub Pages**: push this folder to a repo and enable Pages (Settings →
-  Pages → deploy from branch). Works whether the repo is served at the root
-  of `username.github.io` or at a project subpath like
-  `username.github.io/kumquat-sign-language/` — every link in this project is
-  relative. A `.nojekyll` file is included so GitHub doesn't try to run its
-  Jekyll processor over the files.
-- **Render / Netlify / Vercel / Cloudflare Pages**: create a static site,
-  point it at this folder, leave the build command empty and the publish
-  directory as `.` (or this folder's root).
-
-All of these serve over **HTTPS**, which is exactly what the browser requires
-for camera access — so once deployed, the site works for camera + hand
-tracking with zero extra configuration.
+Hosted on GitHub Pages, deployed straight from the `main` branch (Settings →
+Pages → Deploy from a branch). It's a plain static site — no build step, no
+server code — so a `.nojekyll` file is included so GitHub doesn't try to run
+its Jekyll processor over the files, and every link in the project is
+relative so it works at the `/Kumquat-Sign-Language/` subpath. GitHub Pages
+serves over **HTTPS**, which is exactly what the browser requires for camera
+access.
 
 ## Running it locally
 
