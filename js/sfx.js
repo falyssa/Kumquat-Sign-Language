@@ -51,3 +51,69 @@ export async function playChime(frequencies, { gain = 0.5, noteDuration = 0.3, n
     console.error('Chime playback failed:', err);
   }
 }
+
+// Springy "boing" for the bone shake: a triangle oscillator that bends up
+// then decays back down in pitch, like a wobbling spring.
+export async function playBoing({ gain = 0.4, duration = 0.35 } = {}) {
+  try {
+    const audioCtx = getContext();
+    if (audioCtx.state === 'suspended') {
+      await audioCtx.resume();
+    }
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(180, now);
+    osc.frequency.linearRampToValueAtTime(420, now + 0.06);
+    osc.frequency.exponentialRampToValueAtTime(90, now + duration);
+    gainNode.gain.setValueAtTime(0, now);
+    gainNode.gain.linearRampToValueAtTime(gain, now + 0.02);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + duration + 0.02);
+  } catch (err) {
+    console.error('Boing playback failed:', err);
+  }
+}
+
+// Soft "poof" for the dino print stomp: filtered noise that darkens quickly,
+// like a puff of dust.
+export async function playPoof({ gain = 0.35, duration = 0.25 } = {}) {
+  try {
+    const audioCtx = getContext();
+    if (audioCtx.state === 'suspended') {
+      await audioCtx.resume();
+    }
+    const now = audioCtx.currentTime;
+
+    const bufferSize = Math.max(1, Math.floor(audioCtx.sampleRate * duration));
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1200, now);
+    filter.frequency.exponentialRampToValueAtTime(150, now + duration);
+
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(gain, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+    noise.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    noise.start(now);
+    noise.stop(now + duration + 0.02);
+  } catch (err) {
+    console.error('Poof playback failed:', err);
+  }
+}

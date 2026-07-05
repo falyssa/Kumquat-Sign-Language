@@ -2,7 +2,9 @@
 // (dino print stomp, bone shake). Shared by both pages; each selector is a
 // no-op where that doodle doesn't exist on the page.
 
-function triggerOnClick(selector, animationClass) {
+import { playBoing, playPoof } from './sfx.js';
+
+function triggerOnClick(selector, animationClass, sound) {
   const el = document.querySelector(selector);
   if (!el) return;
 
@@ -10,6 +12,7 @@ function triggerOnClick(selector, animationClass) {
     el.classList.remove(animationClass);
     void el.offsetWidth; // restart the CSS animation
     el.classList.add(animationClass);
+    if (sound) sound();
   };
 
   el.addEventListener('click', trigger);
@@ -23,6 +26,6 @@ function triggerOnClick(selector, animationClass) {
 }
 
 export function initDoodleInteractions() {
-  triggerOnClick('.doodle--print', 'is-stomping');
-  triggerOnClick('.doodle--bone', 'is-shaking');
+  triggerOnClick('.doodle--print', 'is-stomping', playPoof);
+  triggerOnClick('.doodle--bone', 'is-shaking', playBoing);
 }
