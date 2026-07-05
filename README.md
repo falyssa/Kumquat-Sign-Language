@@ -45,25 +45,41 @@ extension, etc.)
    word and an emoji for it, then hit **Capture Pose**. A 3-second countdown
    gives you time to get into position (useful for multi-step or two-hand
    signs), then it records for 5 seconds, shown right on the camera view.
-3. Hit **Save Gesture**. You can capture more samples for the same word to
-   make it more reliable — just capture again and save again. (A word is
-   locked to however many hands it was first trained with — you can't mix a
-   1-hand and a 2-hand version under the same word.)
+3. Hit **Save Gesture**. You can capture more takes for the same word to
+   cover natural variation in how you perform it — just capture again and
+   save again. (A word is locked to however many hands it was first trained
+   with — you can't mix a 1-hand and a 2-hand version under the same word.)
 4. Head back to the **Live Page** — making one of your trained signs will pop
    up its emoji and word, with a short chime to confirm it was recognized.
    Everything is saved in your browser (`localStorage`), so it's still there
    next time you open the site.
+5. Made a mistake, or want to retrain a sign? Hit the ✏️ next to any saved
+   gesture — it pre-fills the word/emoji so you can rename it on the spot, or
+   hit **Capture Pose** again to add another take to it, all without losing
+   the sign's existing training data.
 
 ## How the recognition works
 
 There's no ML training step. Up to two hands are tracked at once (via
 MediaPipe's handedness classification, so a sign that uses a specific left
 and right hand shape stays consistent regardless of where each hand is on
-screen). Each capture stores a normalized snapshot of the 21 landmark points
-per visible hand, concatenated into one vector. Live detection finds the
-nearest stored snapshot with a matching hand count and requires a majority
-match over several frames before showing a result, which keeps it fast,
-offline-friendly, and instantly re-usable across sessions.
+screen). Each capture records an ordered *sequence* of frames rather than
+independent poses, so a sign is recognized by its motion through space *and*
+its handshape — not just handshape alone, which is what makes two
+similar-looking signs with different movements distinguishable. A still
+pose still works fine too — it's simply a take with little to no motion, no
+special-casing needed.
+
+Each frame combines a position/scale-invariant handshape vector with a
+motion vector (each hand's path relative to where it started that take).
+Live matching compares the last couple of seconds of tracked motion against
+every stored take using Dynamic Time Warping (DTW), which elastically
+aligns in time so the same sign performed a bit faster or slower still
+matches. Fingertip landmarks — the least reliable points MediaPipe reports,
+especially once one hand blocks the other in a two-hand sign — count for
+less in that comparison, so occlusion noise can't tank an otherwise-correct
+match. All of this runs fast enough to re-check several times a second,
+fully offline and instantly re-usable across sessions.
 
 ---
 

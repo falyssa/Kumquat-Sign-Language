@@ -1,10 +1,12 @@
 import { startHandTracking } from './handTracker.js';
-import { loadGestures, normalizeHands, classify } from './gestureStore.js';
+import { loadGestures, captureFrame, classifySequence } from './gestureStore.js';
 import { initDoodleInteractions } from './doodles.js';
 import { playChime } from './sfx.js';
 
 const VOTE_WINDOW = 10;
 const MIN_VOTES = 6;
+const LIVE_WINDOW_FRAMES = 70; // ~2.5-3s of motion at typical webcam framerates
+const CLASSIFY_INTERVAL_MS = 120; // re-run DTW matching a few times a second, not every frame
 
 const videoEl = document.getElementById('camera-video');
 const canvasEl = document.getElementById('camera-canvas');
@@ -15,7 +17,10 @@ const statusLineEl = document.getElementById('status-line');
 
 let gestures = loadGestures();
 let votes = [];
-let lastSpawnedId = null;
+let displayedGestureId = null;
+let frameBuffer = [];
+let bufferHandCount = null;
+let lastClassifyAt = 0;
 
 window.addEventListener('storage', () => {
   gestures = loadGestures();
@@ -51,33 +56,53 @@ function spawnEmoji(emoji) {
   emojiLayerEl.appendChild(el);
 }
 
-function updateDisplay() {
-  const winnerId = currentWinner();
-  const gesture = winnerId ? gestures.find((g) => g.id === winnerId) : null;
-
-  if (gesture) {
-    wordPillEl.textContent = gesture.word;
-    if (winnerId !== lastSpawnedId) {
-      spawnEmoji(gesture.emoji);
-      playChime([659.25, 987.77]);
-      lastSpawnedId = winnerId;
-    }
-  } else {
-    wordPillEl.textContent = '—';
-    lastSpawnedId = null;
-  }
+function resetMatching() {
+  frameBuffer = [];
+  votes = [];
 }
 
 function onResults(hands) {
   if (!hands.length) {
-    pushVote(null);
-    updateDisplay();
+    resetMatching();
+    bufferHandCount = null;
+    displayedGestureId = null;
+    wordPillEl.textContent = '—';
     return;
   }
-  const { vector, handCount } = normalizeHands(hands);
-  const match = classify(vector, gestures, handCount);
-  pushVote(match ? match.gesture.id : null);
-  updateDisplay();
+
+  // A change in hand count mid-stream means whatever motion was building up
+  // no longer belongs to the same sign — start the window over rather than
+  // let mismatched-width frames blend together.
+  if (bufferHandCount !== null && hands.length !== bufferHandCount) {
+    resetMatching();
+  }
+  bufferHandCount = hands.length;
+
+  frameBuffer.push(captureFrame(hands));
+  if (frameBuffer.length > LIVE_WINDOW_FRAMES) frameBuffer.shift();
+
+  const now = performance.now();
+  if (now - lastClassifyAt >= CLASSIFY_INTERVAL_MS) {
+    lastClassifyAt = now;
+    const match = classifySequence(frameBuffer, gestures, bufferHandCount);
+    pushVote(match ? match.gesture.id : null);
+
+    const winnerId = currentWinner();
+    if (winnerId && winnerId !== displayedGestureId) {
+      const gesture = gestures.find((g) => g.id === winnerId);
+      if (gesture) {
+        wordPillEl.textContent = gesture.word;
+        spawnEmoji(gesture.emoji);
+        playChime([659.25, 987.77]);
+        displayedGestureId = winnerId;
+        // Start the window fresh so this sign's tail end can't blend into
+        // whatever comes next and throw off the following match.
+        resetMatching();
+      }
+    }
+    // If there's no confident winner (or it's the same sign still being
+    // held), leave the display exactly as it is — no flicker back to "—".
+  }
 }
 
 async function init() {

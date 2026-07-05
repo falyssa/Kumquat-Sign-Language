@@ -172,6 +172,7 @@ h1, h2, h3 {
   margin-top: -0.5rem;
   margin-bottom: 2.75rem;
   text-transform: uppercase;
+  text-shadow: 4px 4px 0 #B27632;
 }
 
 .section-heading {
@@ -187,12 +188,14 @@ h1, h2, h3 {
   color: #FFC800;
   text-transform: uppercase;
   font-size: 2.22rem;
+  text-shadow: 2px 2px 0 #B28C00;
 }
 
 .section--bottom .section-heading {
   color: #FFC800;
   font-size: 3rem;
   margin-bottom: 2rem;
+  text-shadow: 2px 2px 0 #B28C00;
 }
 
 /* ---------- Whiteboard / camera frame ---------- */
@@ -603,6 +606,7 @@ h1, h2, h3 {
   opacity: 0.6;
 }
 
+.gesture-list__edit,
 .gesture-list__delete {
   background: none;
   border: none;
@@ -611,7 +615,24 @@ h1, h2, h3 {
   opacity: 0.6;
 }
 
+.gesture-list__edit:hover,
 .gesture-list__delete:hover {
+  opacity: 1;
+}
+
+.gesture-edit-cancel {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  opacity: 0.7;
+  align-self: center;
+}
+
+.gesture-edit-cancel:hover {
   opacity: 1;
 }
 
@@ -626,6 +647,7 @@ h1, h2, h3 {
   margin-top: 0;
   font-size: 2.08rem;
   text-transform: uppercase;
+  text-shadow: 2px 2px 0 #B27632;
 }
 
 .gesture-count {
