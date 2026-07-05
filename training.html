@@ -20,10 +20,9 @@
   <img src="fern-left.svg" class="fern-sway-img" alt="" aria-hidden="true">
 </div>
 
-<div class="panel-grid training-shell__grid">
-  <div class="panel panel--camera">
-    <div class="panel__inner">
-      <h3 class="panel__title">Camera + Handtracking Setup</h3>
+<div class="training-shell__stack training-shell__grid">
+  <div class="panel-grid">
+    <div class="panel panel--camera">
       <div class="camera-frame">
         <video id="camera-video" autoplay playsinline muted></video>
         <canvas id="camera-canvas"></canvas>
@@ -37,31 +36,33 @@
         <span id="hand-status-label">Waiting for camera&hellip;</span>
       </div>
     </div>
+
+    <div class="panel panel--details">
+      <h3 class="section-heading">Details</h3>
+      <div class="details-form">
+        <div class="field">
+          <label for="word-input">Word / label</label>
+          <input type="text" id="word-input" placeholder="e.g. hello" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="emoji-input">Emoji</label>
+          <input type="text" id="emoji-input" placeholder="e.g. 👋" autocomplete="off" maxlength="8">
+        </div>
+
+        <button class="btn" id="capture-btn" type="button">Capture Pose</button>
+        <div class="capture-progress">
+          <div class="capture-progress__bar" id="capture-progress-bar"></div>
+        </div>
+        <p class="status-line status-line--tight" id="capture-status">Press Capture, then get into position — recording starts after a 3-second countdown and runs for 5 seconds.</p>
+
+        <button class="btn btn--secondary" id="save-btn" type="button" disabled>Save Gesture</button>
+      </div>
+    </div>
   </div>
 
-  <div class="panel panel--details">
-    <h3 class="section-heading">Details</h3>
-    <div class="details-form">
-      <div class="field">
-        <label for="word-input">Word / label</label>
-        <input type="text" id="word-input" placeholder="e.g. hello" autocomplete="off">
-      </div>
-      <div class="field">
-        <label for="emoji-input">Emoji</label>
-        <input type="text" id="emoji-input" placeholder="e.g. 👋" autocomplete="off" maxlength="8">
-      </div>
-
-      <button class="btn" id="capture-btn" type="button">Capture Pose</button>
-      <div class="capture-progress">
-        <div class="capture-progress__bar" id="capture-progress-bar"></div>
-      </div>
-      <p class="status-line status-line--tight" id="capture-status">Press Capture, then get into position — recording starts after a 3-second countdown and runs for 5 seconds.</p>
-
-      <button class="btn btn--secondary" id="save-btn" type="button" disabled>Save Gesture</button>
-
-      <h3 class="section-heading section-heading--sm">Saved Gestures</h3>
-      <ul class="gesture-list" id="gesture-list"></ul>
-    </div>
+  <div class="saved-gestures-box">
+    <h3 class="section-heading section-heading--sm">Saved Gestures</h3>
+    <ul class="gesture-list" id="gesture-list"></ul>
   </div>
 </div>
 
