@@ -186,7 +186,7 @@ h1, h2, h3 {
 .panel--details .section-heading {
   color: #FFC800;
   text-transform: uppercase;
-  font-size: 2rem;
+  font-size: 2.22rem;
 }
 
 .section--bottom .section-heading {
@@ -379,7 +379,7 @@ h1, h2, h3 {
 
 .panel {
   border-radius: 20px;
-  padding: 1.4rem;
+  padding: 1.6rem;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
 
@@ -387,14 +387,14 @@ h1, h2, h3 {
   background: var(--dark-blue);
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.6rem;
 }
 
 .camera-frame {
   position: relative;
   background: var(--board-face);
   border-radius: 10px;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 
@@ -488,37 +488,44 @@ h1, h2, h3 {
 .details-form {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.9rem;
 }
 
 .field label {
   display: block;
-  font-size: 0.8rem;
-  margin-bottom: 0.3rem;
+  font-size: 0.76rem;
+  margin-bottom: 0.28rem;
 }
 
 .field input {
   width: 100%;
   font-family: var(--font-body);
-  font-size: 1rem;
-  padding: 0.55rem 0.7rem;
+  font-size: 0.92rem;
+  padding: 0.56rem 0.68rem;
   border-radius: 8px;
   border: 2px solid var(--dark-blue);
   background: var(--white);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
+  outline: none;
+}
+
+.field input:focus {
+  border-color: var(--yellow);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 0 3px rgba(239, 229, 97, 0.45);
 }
 
 .btn {
+  --btn-shade: #B27632;
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border: none;
   border-radius: 10px;
-  padding: 0.7rem 1.2rem;
+  padding: 0.68rem 1.12rem;
   cursor: pointer;
   background: var(--orange);
   color: var(--ink);
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2), 0 6px 14px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px 0 var(--btn-shade), 0 6px 14px rgba(0, 0, 0, 0.18);
   transition: transform 0.1s ease, opacity 0.15s ease, box-shadow 0.1s ease;
 }
 
@@ -528,7 +535,7 @@ h1, h2, h3 {
 
 .btn:active {
   transform: translateY(3px);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 0 var(--btn-shade), 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .btn:disabled {
@@ -538,6 +545,7 @@ h1, h2, h3 {
 }
 
 .btn--secondary {
+  --btn-shade: #A7A044;
   background: var(--yellow);
 }
 
@@ -566,32 +574,32 @@ h1, h2, h3 {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  max-height: 220px;
+  gap: 0.48rem;
+  max-height: 208px;
   overflow-y: auto;
 }
 
 .gesture-list__item {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.56rem;
   background: var(--white);
   border-radius: 8px;
-  padding: 0.4rem 0.6rem;
+  padding: 0.44rem 0.6rem;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .gesture-list__emoji {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
 }
 
 .gesture-list__word {
   flex: 1;
-  font-size: 0.9rem;
+  font-size: 0.84rem;
 }
 
 .gesture-list__samples {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   opacity: 0.6;
 }
 
@@ -599,7 +607,7 @@ h1, h2, h3 {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1.08rem;
   opacity: 0.6;
 }
 
@@ -610,14 +618,21 @@ h1, h2, h3 {
 .saved-gestures-box {
   background: #449071;
   border-radius: 14px;
-  padding: 0.9rem 1rem 1.1rem;
+  padding: 0.96rem 1.12rem 1.2rem;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
 
 .saved-gestures-box .section-heading--sm {
   margin-top: 0;
-  font-size: 1.8rem;
+  font-size: 2.08rem;
   text-transform: uppercase;
+}
+
+.gesture-count {
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin: 0 0 0.75rem;
 }
 
 /* ---------- Doodles: shared (drawn assets as <img>, animated via CSS) ---------- */
@@ -743,8 +758,8 @@ h1, h2, h3 {
 
 /* Dino print: click-triggered one-shot stomp, bottom-right of the dark-blue area */
 .doodle--print {
-  bottom: 105px;
-  right: 110px;
+  bottom: 150px;
+  right: 160px;
   width: 140px;
   height: auto;
   display: block;
@@ -785,7 +800,7 @@ h1, h2, h3 {
 
 .training-shell__grid {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1152px;
   position: relative;
   z-index: 1;
 }

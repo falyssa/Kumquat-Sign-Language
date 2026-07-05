@@ -5,6 +5,12 @@ your own signs, assign each one a word and an emoji, and Kumquat Sign Language
 will pop it up live from your webcam — no accounts, no server, no retraining
 each time you open it.
 
+It's named after (and made for) my autistic brother Kumquat, to help him
+practice sign language — when he signs something correctly, he gets to see it
+right away as an emoji on screen, with a little sound to go with it. It's also
+where we keep every sign we've invented together as siblings, so none of them
+get forgotten.
+
 ## Deploying it (GitHub Pages, Render, etc.)
 
 This is a plain static site — no build step, no server code, no environment
@@ -51,8 +57,9 @@ extension, etc.)
    locked to however many hands it was first trained with — you can't mix a
    1-hand and a 2-hand version under the same word.)
 4. Head back to the **Live Page** — making one of your trained signs will pop
-   up its emoji and word. Everything is saved in your browser (`localStorage`),
-   so it's still there next time you open the site.
+   up its emoji and word, with a short chime to confirm it was recognized.
+   Everything is saved in your browser (`localStorage`), so it's still there
+   next time you open the site.
 
 ## How the recognition works
 
@@ -64,3 +71,7 @@ per visible hand, concatenated into one vector. Live detection finds the
 nearest stored snapshot with a matching hand count and requires a majority
 match over several frames before showing a result, which keeps it fast,
 offline-friendly, and instantly re-usable across sessions.
+
+---
+
+Created by: Falyssa, with love.

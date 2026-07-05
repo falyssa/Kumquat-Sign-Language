@@ -18,6 +18,7 @@ const progressBar = document.getElementById('capture-progress-bar');
 const captureStatus = document.getElementById('capture-status');
 const saveBtn = document.getElementById('save-btn');
 const gestureListEl = document.getElementById('gesture-list');
+const gestureCountEl = document.getElementById('gesture-count');
 const countdownEl = document.getElementById('capture-countdown');
 const countdownNumberEl = document.getElementById('capture-countdown-number');
 const countdownLabelEl = document.getElementById('capture-countdown-label');
@@ -39,6 +40,7 @@ function onResults(hands) {
 
 function renderGestureList() {
   const gestures = loadGestures();
+  gestureCountEl.textContent = `${gestures.length} ${gestures.length === 1 ? 'Gesture' : 'Gestures'} Saved`;
   gestureListEl.innerHTML = '';
   for (const gesture of gestures) {
     const li = document.createElement('li');
