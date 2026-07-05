@@ -10,53 +10,15 @@
 
 <a class="nav-link training-shell__nav" href="index.html">Live Page &rarr;</a>
 
-<svg class="doodle doodle--fern doodle--fern-tr" viewBox="0 0 130 170" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <g id="frond-tr">
-      <path d="M0,0 C-2,-30 2,-60 0,-88" stroke="currentColor" stroke-width="1.8"/>
-      <path d="M0,-20 C-8,-24 -13,-20 -13,-13 C-8,-11 -3,-15 0,-20 Z" stroke="currentColor" stroke-width="1.1"/>
-      <path d="M0,-30 C8,-34 13,-30 13,-23 C8,-21 3,-25 0,-30 Z" stroke="currentColor" stroke-width="1.1"/>
-      <path d="M0,-45 C-7,-49 -11,-45 -11,-39 C-7,-37 -3,-41 0,-45 Z" stroke="currentColor" stroke-width="1.1"/>
-      <path d="M0,-55 C7,-59 11,-55 11,-49 C7,-47 3,-51 0,-55 Z" stroke="currentColor" stroke-width="1.1"/>
-      <path d="M0,-68 C-5,-71 -8,-68 -8,-63 C-5,-62 -2,-65 0,-68 Z" stroke="currentColor" stroke-width="1"/>
-      <path d="M0,-76 C5,-79 8,-76 8,-71 C5,-70 2,-73 0,-76 Z" stroke="currentColor" stroke-width="1"/>
-      <path d="M0,-88 C-3,-92 -3,-96 0,-100 C3,-96 3,-92 0,-88 Z" stroke="currentColor" stroke-width="1"/>
-    </g>
-  </defs>
-  <g transform="translate(65,160) rotate(-30)">
-    <use href="#frond-tr" class="fern-leaf"/>
-  </g>
-  <g transform="translate(65,160) scale(1.1)">
-    <use href="#frond-tr" class="fern-leaf fern-leaf--delay-1"/>
-  </g>
-  <g transform="translate(65,160) rotate(30)">
-    <use href="#frond-tr" class="fern-leaf fern-leaf--delay-2"/>
-  </g>
-</svg>
+<div class="doodle doodle--fern-corner doodle--fern-corner--tl">
+  <div class="fern-flip">
+    <img src="fern-right.svg" class="fern-sway-img" alt="" aria-hidden="true">
+  </div>
+</div>
 
-<svg class="doodle doodle--fern doodle--fern-bl" viewBox="0 0 130 170" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <g id="frond-bl">
-      <path d="M0,0 C-2,-30 2,-60 0,-88" stroke="currentColor" stroke-width="1.8"/>
-      <path d="M0,-20 C-8,-24 -13,-20 -13,-13 C-8,-11 -3,-15 0,-20 Z" stroke="currentColor" stroke-width="1.1"/>
-      <path d="M0,-30 C8,-34 13,-30 13,-23 C8,-21 3,-25 0,-30 Z" stroke="currentColor" stroke-width="1.1"/>
-      <path d="M0,-45 C-7,-49 -11,-45 -11,-39 C-7,-37 -3,-41 0,-45 Z" stroke="currentColor" stroke-width="1.1"/>
-      <path d="M0,-55 C7,-59 11,-55 11,-49 C7,-47 3,-51 0,-55 Z" stroke="currentColor" stroke-width="1.1"/>
-      <path d="M0,-68 C-5,-71 -8,-68 -8,-63 C-5,-62 -2,-65 0,-68 Z" stroke="currentColor" stroke-width="1"/>
-      <path d="M0,-76 C5,-79 8,-76 8,-71 C5,-70 2,-73 0,-76 Z" stroke="currentColor" stroke-width="1"/>
-      <path d="M0,-88 C-3,-92 -3,-96 0,-100 C3,-96 3,-92 0,-88 Z" stroke="currentColor" stroke-width="1"/>
-    </g>
-  </defs>
-  <g transform="translate(65,160) rotate(-30)">
-    <use href="#frond-bl" class="fern-leaf"/>
-  </g>
-  <g transform="translate(65,160) scale(1.1)">
-    <use href="#frond-bl" class="fern-leaf fern-leaf--delay-1"/>
-  </g>
-  <g transform="translate(65,160) rotate(30)">
-    <use href="#frond-bl" class="fern-leaf fern-leaf--delay-2"/>
-  </g>
-</svg>
+<div class="doodle doodle--fern-corner doodle--fern-corner--br">
+  <img src="fern-left.svg" class="fern-sway-img" alt="" aria-hidden="true">
+</div>
 
 <div class="panel-grid training-shell__grid">
   <div class="panel panel--camera">
@@ -65,6 +27,10 @@
       <div class="camera-frame">
         <video id="camera-video" autoplay playsinline muted></video>
         <canvas id="camera-canvas"></canvas>
+        <div class="capture-countdown" id="capture-countdown">
+          <span class="capture-countdown__number" id="capture-countdown-number"></span>
+          <span class="capture-countdown__label" id="capture-countdown-label"></span>
+        </div>
       </div>
       <div class="hand-status">
         <span class="hand-status__dot" id="hand-status-dot"></span>
@@ -89,7 +55,7 @@
       <div class="capture-progress">
         <div class="capture-progress__bar" id="capture-progress-bar"></div>
       </div>
-      <p class="status-line status-line--tight" id="capture-status">Hold your sign steady, then press Capture.</p>
+      <p class="status-line status-line--tight" id="capture-status">Press Capture, then get into position — recording starts after a 3-second countdown and runs for 5 seconds.</p>
 
       <button class="btn btn--secondary" id="save-btn" type="button" disabled>Save Gesture</button>
 

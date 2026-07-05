@@ -1,5 +1,5 @@
 import { startHandTracking } from './handTracker.js';
-import { loadGestures, normalize, classify } from './gestureStore.js';
+import { loadGestures, normalizeHands, classify } from './gestureStore.js';
 import { initDoodleInteractions } from './doodles.js';
 
 const VOTE_WINDOW = 10;
@@ -66,14 +66,14 @@ function updateDisplay() {
   }
 }
 
-function onResults(landmarks) {
-  if (!landmarks) {
+function onResults(hands) {
+  if (!hands.length) {
     pushVote(null);
     updateDisplay();
     return;
   }
-  const vec = normalize(landmarks);
-  const match = classify(vec, gestures);
+  const { vector, handCount } = normalizeHands(hands);
+  const match = classify(vector, gestures, handCount);
   pushVote(match ? match.gesture.id : null);
   updateDisplay();
 }
@@ -86,7 +86,7 @@ async function init() {
     : 'No gestures trained yet — visit the Training Page first.';
 
   try {
-    await startHandTracking({ videoEl, canvasEl, onResults, numHands: 1 });
+    await startHandTracking({ videoEl, canvasEl, onResults, numHands: 2 });
     placeholderEl.style.display = 'none';
   } catch (err) {
     statusLineEl.textContent = `Camera unavailable: ${err.message}`;

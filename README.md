@@ -42,19 +42,25 @@ extension, etc.)
 ## Using it
 
 1. Open the **Training Page** (top-right link), allow camera access.
-2. Make a hand sign, type in a word and an emoji for it, then hit
-   **Capture Pose** and hold the sign steady for the ~1.5s capture.
+2. Make a hand sign — one hand or two, whichever the sign needs — type in a
+   word and an emoji for it, then hit **Capture Pose**. A 3-second countdown
+   gives you time to get into position (useful for multi-step or two-hand
+   signs), then it records for 5 seconds, shown right on the camera view.
 3. Hit **Save Gesture**. You can capture more samples for the same word to
-   make it more reliable — just capture again and save again.
+   make it more reliable — just capture again and save again. (A word is
+   locked to however many hands it was first trained with — you can't mix a
+   1-hand and a 2-hand version under the same word.)
 4. Head back to the **Live Page** — making one of your trained signs will pop
    up its emoji and word. Everything is saved in your browser (`localStorage`),
    so it's still there next time you open the site.
 
 ## How the recognition works
 
-There's no ML training step. Each capture stores a normalized snapshot of the
-21 MediaPipe hand-landmark points (translated to the wrist, scaled by hand
-size). Live detection just finds the nearest stored snapshot to the current
-frame and requires a majority match over several frames before showing a
-result, which keeps it fast, offline-friendly, and instantly re-usable across
-sessions.
+There's no ML training step. Up to two hands are tracked at once (via
+MediaPipe's handedness classification, so a sign that uses a specific left
+and right hand shape stays consistent regardless of where each hand is on
+screen). Each capture stores a normalized snapshot of the 21 landmark points
+per visible hand, concatenated into one vector. Live detection finds the
+nearest stored snapshot with a matching hand count and requires a majority
+match over several frames before showing a result, which keeps it fast,
+offline-friendly, and instantly re-usable across sessions.

@@ -1,19 +1,28 @@
-// Click/tap-to-stomp interaction for the dino print doodle. Shared by both pages.
-export function initDoodleInteractions() {
-  const print = document.querySelector('.doodle--print');
-  if (!print) return;
+// Click/tap-to-trigger one-shot animations for the interactive doodles
+// (dino print stomp, bone shake). Shared by both pages; each selector is a
+// no-op where that doodle doesn't exist on the page.
 
-  const stomp = () => {
-    print.classList.remove('is-stomping');
-    void print.offsetWidth; // restart the CSS animation
-    print.classList.add('is-stomping');
+function triggerOnClick(selector, animationClass) {
+  const el = document.querySelector(selector);
+  if (!el) return;
+
+  const trigger = () => {
+    el.classList.remove(animationClass);
+    void el.offsetWidth; // restart the CSS animation
+    el.classList.add(animationClass);
   };
 
-  print.addEventListener('click', stomp);
-  print.addEventListener('keydown', (event) => {
+  el.addEventListener('click', trigger);
+  el.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      stomp();
+      trigger();
     }
   });
+  el.addEventListener('animationend', () => el.classList.remove(animationClass));
+}
+
+export function initDoodleInteractions() {
+  triggerOnClick('.doodle--print', 'is-stomping');
+  triggerOnClick('.doodle--bone', 'is-shaking');
 }

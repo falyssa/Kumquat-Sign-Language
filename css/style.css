@@ -53,18 +53,30 @@ h1, h2, h3 {
   overflow: hidden;
 }
 
-.section--top {
-  background: var(--turquoise);
-  padding-top: 1.5rem;
-}
-
-.section--mid {
-  background: var(--dark-blue);
+/* Merged turquoise+dark-blue hero: the whiteboard visually straddles the
+   color seam at its own vertical midpoint, so both colors are one section
+   with a hard-stop gradient rather than two stacked boxes. --hero-seam is
+   the single source of truth for where that seam sits (as % of the hero's
+   total height) — the bone doodle also anchors to it so it always sits
+   exactly where the two colors meet. */
+.hero {
+  position: relative;
+  padding: 1.5rem 3rem 4.5rem;
+  overflow: hidden;
   color: var(--white);
-  min-height: 22rem;
+  --hero-seam: 50%;
+  background: linear-gradient(
+    to bottom,
+    var(--turquoise) 0%,
+    var(--turquoise) var(--hero-seam),
+    var(--dark-blue) var(--hero-seam),
+    var(--dark-blue) 100%
+  );
 }
 
 .section--bottom {
+  position: relative;
+  margin-top: -46px;
   background: var(--green);
   min-height: 18rem;
 }
@@ -314,6 +326,58 @@ h1, h2, h3 {
   transform: scaleX(-1);
 }
 
+.capture-countdown {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: rgba(0, 0, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.capture-countdown.is-visible {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.capture-countdown__number {
+  font-family: var(--font-title);
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--white);
+}
+
+.capture-countdown__label {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.capture-countdown.is-recording .capture-countdown__label::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #e0776b;
+  animation: recording-pulse 1s ease-in-out infinite;
+}
+
+@keyframes recording-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
 .hand-status {
   display: flex;
   align-items: center;
@@ -454,7 +518,7 @@ h1, h2, h3 {
   opacity: 1;
 }
 
-/* ---------- Doodles: shared ---------- */
+/* ---------- Doodles: shared (drawn assets as <img>, animated via CSS) ---------- */
 
 .doodle {
   position: absolute;
@@ -462,38 +526,133 @@ h1, h2, h3 {
   z-index: 0;
 }
 
-.doodle--fern {
-  top: 12px;
-  left: 12px;
-  width: 130px;
-  color: var(--fern);
-  pointer-events: none;
+/* Fern: positioned corner wrapper > optional static flip wrapper > animated <img>.
+   Both fern SVGs are drawn with their bare stem "tail" at a bottom corner, so a
+   vertical flip moves that tail to the top — used whenever a fern should look
+   like it's coming out of a top corner. */
+.doodle--fern-corner {
+  width: 260px;
 }
 
+.doodle--fern-corner--tr {
+  top: 0;
+  right: 0;
+}
+
+.doodle--fern-corner--tl {
+  top: 0;
+  left: 0;
+}
+
+.doodle--fern-corner--br {
+  bottom: 0;
+  right: 0;
+}
+
+.fern-flip {
+  display: block;
+  width: 100%;
+  transform: scaleY(-1);
+}
+
+.fern-flip-both {
+  display: block;
+  width: 100%;
+  transform: scaleX(-1) scaleY(-1);
+}
+
+.fern-sway-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  animation: fern-wind-bob 3.4s ease-in-out infinite;
+}
+
+@keyframes fern-wind-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+/* T-Rex: two frames stacked at the same position/size, hard-switching
+   between them (no crossfade blend). Both frames must switch in a
+   complementary, instantaneous way — if the base frame stayed at a
+   constant opacity:1 while the active frame appeared on top, any pose
+   difference between the two (e.g. arm position) would show both at once,
+   looking like extra limbs. */
 .doodle--trex {
-  bottom: 6px;
-  left: 12px;
-  width: 220px;
+  bottom: 0;
+  left: 0;
+  width: 260px;
+  height: auto;
+  display: block;
 }
 
-.doodle--print {
-  bottom: 20px;
-  right: 24px;
-  width: 90px;
-  color: var(--white);
+.trex-frame--base {
+  animation: trex-switch-out 3.2s steps(1) infinite;
+}
+
+.trex-frame--active {
+  opacity: 0;
+  animation: trex-switch-in 3.2s steps(1) infinite;
+}
+
+@keyframes trex-switch-out {
+  0%, 65% { opacity: 1; }
+  65.01%, 100% { opacity: 0; }
+}
+
+@keyframes trex-switch-in {
+  0%, 65% { opacity: 0; }
+  65.01%, 100% { opacity: 1; }
+}
+
+/* Bone: click-triggered one-shot shake. Anchored to --hero-seam so it always
+   sits exactly where the turquoise and dark-blue backgrounds meet. */
+.doodle--bone {
+  top: var(--hero-seam);
+  right: -50px;
+  width: 340px;
+  height: auto;
+  display: block;
+  transform: translateY(-50%);
   pointer-events: auto;
   cursor: pointer;
 }
 
-.doodle--bone {
-  top: 24px;
-  right: 24px;
-  width: 90px;
-  color: var(--white);
+.doodle--bone.is-shaking {
+  animation: bone-shake 0.5s ease-in-out;
 }
 
-.on-light {
-  color: var(--dark-blue);
+@keyframes bone-shake {
+  0%, 100% { transform: translateY(-50%) rotate(0deg) translateX(0); }
+  15% { transform: translateY(-50%) rotate(-9deg) translateX(-4px); }
+  30% { transform: translateY(-50%) rotate(8deg) translateX(3px); }
+  45% { transform: translateY(-50%) rotate(-6deg) translateX(-3px); }
+  60% { transform: translateY(-50%) rotate(5deg) translateX(2px); }
+  75% { transform: translateY(-50%) rotate(-3deg) translateX(-1px); }
+  90% { transform: translateY(-50%) rotate(2deg) translateX(0); }
+}
+
+/* Dino print: click-triggered one-shot stomp, bottom-right of the dark-blue area */
+.doodle--print {
+  bottom: 105px;
+  right: 60px;
+  width: 140px;
+  height: auto;
+  display: block;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: rotate(45deg);
+}
+
+.doodle--print.is-stomping {
+  animation: print-stomp 0.4s ease-out;
+}
+
+@keyframes print-stomp {
+  0% { transform: rotate(45deg) scale(1); opacity: 1; }
+  35% { transform: rotate(45deg) scale(0.82); opacity: 0.6; }
+  100% { transform: rotate(45deg) scale(1); opacity: 1; }
 }
 
 /* ---------- Training page: standalone shell (different layout from the Live page) ---------- */
@@ -520,88 +679,6 @@ h1, h2, h3 {
   max-width: 920px;
   position: relative;
   z-index: 1;
-}
-
-.doodle--fern-tr {
-  top: 16px;
-  right: 16px;
-  left: auto;
-  width: 110px;
-  transform: scaleX(-1);
-}
-
-.doodle--fern-bl {
-  bottom: 16px;
-  left: 16px;
-  top: auto;
-  width: 110px;
-}
-
-/* Fern wave */
-.fern-leaf {
-  transform-box: fill-box;
-  transform-origin: bottom center;
-  animation: fern-wave 3.2s ease-in-out infinite alternate;
-}
-
-.fern-leaf--delay-1 {
-  animation-delay: 0.3s;
-}
-
-.fern-leaf--delay-2 {
-  animation-delay: 0.6s;
-}
-
-@keyframes fern-wave {
-  0% { transform: rotate(-6deg); }
-  100% { transform: rotate(6deg); }
-}
-
-/* T-Rex arm + jaw */
-.trex-arm {
-  transform-box: fill-box;
-  transform-origin: top right;
-  animation: trex-arm-flap 1.8s ease-in-out infinite;
-}
-
-@keyframes trex-arm-flap {
-  0%, 100% { transform: rotate(-10deg); }
-  50% { transform: rotate(12deg); }
-}
-
-.trex-jaw {
-  transform-box: fill-box;
-  transform-origin: left center;
-  animation: trex-mouth 2.6s ease-in-out infinite;
-}
-
-@keyframes trex-mouth {
-  0%, 100% { transform: rotate(0deg); }
-  45% { transform: rotate(9deg); }
-  55% { transform: rotate(9deg); }
-}
-
-/* Dino print stomp (triggered by JS class) */
-.doodle--print.is-stomping .print-mark {
-  animation: print-stomp 0.4s ease-out;
-}
-
-@keyframes print-stomp {
-  0% { transform: scale(1); opacity: 1; }
-  35% { transform: scale(0.8); opacity: 0.6; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* Bone bob */
-.bone-mark {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: bone-bob 1.6s ease-in-out infinite;
-}
-
-@keyframes bone-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
 }
 
 .visually-hidden {

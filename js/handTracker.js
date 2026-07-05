@@ -13,16 +13,18 @@ const MODEL_URL =
 
 /**
  * Starts the webcam into `videoEl` and begins running hand-landmark
- * detection on every new frame. Calls `onResults(landmarksOrNull)` each
- * time a frame is processed, where landmarksOrNull is either the 21-point
- * array for the first detected hand, or null if no hand is visible.
+ * detection on every new frame. Calls `onResults(hands)` each time a frame
+ * is processed, where `hands` is an array of 0, 1, or 2 entries shaped
+ * `{ landmarks, handedness }` (handedness is "Left" or "Right", used to
+ * keep a stable ordering for two-hand gestures regardless of on-screen
+ * position). Two hands are tracked by default, but neither is required.
  *
- * If `canvasEl` is given, the tracked hand skeleton (nodes + connecting
- * lines) is drawn onto it every frame, matched to the video's native size.
+ * If `canvasEl` is given, the tracked hand skeleton(s) (nodes + connecting
+ * lines) are drawn onto it every frame, matched to the video's native size.
  *
  * Returns { stop() } to tear down the camera stream and detection loop.
  */
-export async function startHandTracking({ videoEl, canvasEl, onResults, numHands = 1 }) {
+export async function startHandTracking({ videoEl, canvasEl, onResults, numHands = 2 }) {
   const stream = await navigator.mediaDevices.getUserMedia({
     video: { width: 640, height: 480 },
     audio: false,
@@ -43,24 +45,25 @@ export async function startHandTracking({ videoEl, canvasEl, onResults, numHands
   let stopped = false;
   let lastVideoTime = -1;
 
-  function drawSkeleton(landmarks) {
+  function drawSkeleton(hands) {
     if (!canvasCtx) return;
     if (canvasEl.width !== videoEl.videoWidth || canvasEl.height !== videoEl.videoHeight) {
       canvasEl.width = videoEl.videoWidth;
       canvasEl.height = videoEl.videoHeight;
     }
     canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-    if (!landmarks) return;
-    drawingUtils.drawConnectors(landmarks, HandLandmarker.HAND_CONNECTIONS, {
-      color: '#EFE561',
-      lineWidth: 3,
-    });
-    drawingUtils.drawLandmarks(landmarks, {
-      color: '#FFA948',
-      fillColor: '#FFA948',
-      lineWidth: 1,
-      radius: 4,
-    });
+    for (const hand of hands) {
+      drawingUtils.drawConnectors(hand.landmarks, HandLandmarker.HAND_CONNECTIONS, {
+        color: '#EFE561',
+        lineWidth: 3,
+      });
+      drawingUtils.drawLandmarks(hand.landmarks, {
+        color: '#FFA948',
+        fillColor: '#FFA948',
+        lineWidth: 1,
+        radius: 4,
+      });
+    }
   }
 
   function loop() {
@@ -68,9 +71,13 @@ export async function startHandTracking({ videoEl, canvasEl, onResults, numHands
     if (videoEl.currentTime !== lastVideoTime) {
       lastVideoTime = videoEl.currentTime;
       const results = handLandmarker.detectForVideo(videoEl, performance.now());
-      const landmarks = results.landmarks && results.landmarks[0] ? results.landmarks[0] : null;
-      drawSkeleton(landmarks);
-      onResults(landmarks);
+      const hands = (results.landmarks || []).map((landmarks, i) => ({
+        landmarks,
+        handedness: results.handedness?.[i]?.[0]?.categoryName || 'Unknown',
+      }));
+      hands.sort((a, b) => a.handedness.localeCompare(b.handedness));
+      drawSkeleton(hands);
+      onResults(hands);
     }
     requestAnimationFrame(loop);
   }
