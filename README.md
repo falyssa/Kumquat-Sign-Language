@@ -81,6 +81,11 @@ less in that comparison, so occlusion noise can't tank an otherwise-correct
 match. All of this runs fast enough to re-check several times a second,
 fully offline and instantly re-usable across sessions.
 
+## Future updates / ideas
+
+- Instead of the chime, have it say the word out loud when a sign is
+  recognized — with a choice of voice.
+
 ---
 
 Created by: Falyssa, with love.
